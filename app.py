@@ -49,10 +49,7 @@ def render_content(tab):
 
 # Tab 2 callbacks
 
-@app.callback(Output('page-2-graphic', 'figure'),
-              [Input('page-2-radios', 'value')])
-def radio_results(value):
-    return display_eval_metrics(value)
+
 
 # Tab 3 callback # 1
 @app.callback(Output('page-3-content', 'children'),
@@ -143,6 +140,9 @@ def final_prediction(family, age, cabin, title, sex, embark):
     df['mrs']=np.where(df.title=='Mrs.', 1,0)
     df['miss']=np.where(df.title=='Miss', 1,0)
     df['vip']=np.where(df.title=='VIP', 1,0)
+    df['single']=np.where(df.family == 0, 1,0)
+    df['small_family']=np.where(2<=df.family <= 4, 1,0)
+    df['large_family']=np.where(df.family <= 5, 1,0)
     # drop unnecessary columns, and reorder columns to match the logreg model.
     df=df.drop(['age', 'cabin', 'title', 'sex', 'embark'], axis=1)
     df=df[['family', 'female', 'second', 'third', 'cherbourg', 'queenstown', 'age2028',
