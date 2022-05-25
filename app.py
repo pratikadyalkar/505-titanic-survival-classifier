@@ -126,7 +126,7 @@ def final_prediction(family, age, cabin, title, sex, embark):
     keys=['family', 'age', 'cabin', 'title', 'sex', 'embark']
     dict6=dict(zip(keys, inputs))
     df=pd.DataFrame([dict6])
-    # create the features we'll need to run our logreg model.
+    # create the features we'll need to run our rf model.
     df['age']=pd.to_numeric(df.age, errors='coerce')
     df['family']=pd.to_numeric(df.family, errors='coerce')
     df['third']=np.where(df.cabin=='Third',1,0)
@@ -143,13 +143,13 @@ def final_prediction(family, age, cabin, title, sex, embark):
     df['single']=np.where(df.family == 1, 1,0)
     df['small_family']=np.where((df.family>=2) & (df.family<=4), 1,0)
     df['large_family']=np.where(5<=df.family , 1,0)
-    # drop unnecessary columns, and reorder columns to match the logreg model.
+    # drop unnecessary columns, and reorder columns to match the rf model.
     df=df.drop(['age', 'cabin', 'title', 'sex', 'embark'], axis=1)
     df=df[['family', 'female', 'second', 'third', 'cherbourg', 'queenstown', 'age2028',
     'age2838', 'age3880', 'mrs', 'miss', 'vip','single','small_family','large_family']]
     # unpickle the final model
     file = open('resources/final_rf_model.pkl', 'rb')
-    logreg=pickle.load(file)
+    rf=pickle.load(file)
     file.close()
     # predict on the user-input values (need to create an array for this)
     firstrow=df.loc[0]
@@ -159,7 +159,7 @@ def final_prediction(family, age, cabin, title, sex, embark):
     thisarray=myarray.reshape((1, myarray.shape[0]))
     print('thisarray', thisarray)
 
-    prob=logreg.predict_proba(thisarray)
+    prob=rf.predict_proba(thisarray)
     final_prob=round(float(prob[0][1])*100,1)
     return(f'Probability of Survival: {final_prob}%')
 
