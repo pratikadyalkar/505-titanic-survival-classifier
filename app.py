@@ -48,7 +48,10 @@ def render_content(tab):
         return tab_4.tab_4_layout
 
 # Tab 2 callbacks
-
+@app.callback(Output('page-2-graphic', 'figure'),
+              [Input('page-2-radios', 'value')])
+def radio_results(value):
+    return display_eval_metrics(value)
 
 
 # Tab 3 callback # 1
